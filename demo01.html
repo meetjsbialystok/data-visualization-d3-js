@@ -1,0 +1,163 @@
+<html>
+    <script src="d3.v3.min.js"></script>
+
+    <body>
+        <svg>
+            <rect width="50" height="200" style="fill: blue;" />
+        </svg>
+
+
+        <p>Paragraph red</p>
+        <p id="p1">Paragraph blue</p>
+        <p class="text-label">Paragraph green</p>
+
+    </body>
+
+
+    <script>
+        //D3
+        d3.select("body").append("svg")
+                        .append("rect")
+                        .attr("width", 50)
+                        .attr("height", 200)
+                        .style("fill", "blue");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // SELECTIONS
+    // select all paragraph elements
+    // d3.selectAll("p").style("color", "red");
+
+    // // // select an individual element
+    // d3.selectAll("#p1").style("color", "blue");
+
+    // // // select a class of elements
+    // d3.selectAll(".text-label").style("color", "green");
+
+    // d3.select("body").append("svg").append("circle")
+    // .attr("cx", 100)
+    // .attr("cy", 100)
+    // .attr("r", 50).style("fill", "red");
+
+
+
+
+
+
+
+
+
+
+
+    // // DYNAMIC PROPERTIES
+    // // Randomly Color Paragraphs
+    // d3.selectAll("p").style("color", function() { 
+    //                                     return "hsl(" + Math.random() * 360 + ",100%,50%)"; 
+    //                                 }); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // // Using data
+    // d3.selectAll("p")
+    //     .data([4, 8, 15, 16, 23, 42])
+    //     .style("font-size", function(d) { return d + "px"; });
+
+
+    // Real-Time Data Binding
+    // Adding data with .enter()
+    // d3.select("body").selectAll("div")
+    //                 .data([4, 8, 15, 16, 23, 42])
+    //                 .enter().append("div")
+    //                 .text(function(d) { return "I'm number "+ d + "!"; });
+     
+    // //Updating existing elements
+    // var p = d3.select("body").selectAll("p")
+    //                         .data([4, 8, 15, 16, 23, 42])
+    //                         .text(function(d) { return d; });
+
+    // // // Adding Nodes
+    //  p.enter().append("p")
+    //          .text(function(d) { return d; });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // // ANIMATION
+    // // Fade background to black
+    // d3.select("body").transition()
+    //                 .duration(10000)
+    //                 .delay(1000)
+    //                 .style("background-color", "#000");
+
+
+    // d3.select("body").append("svg").append("circle")
+    // .attr("cx", 100)
+    // .attr("cy", 100)
+    // .attr("r", 50).style("fill", "red");
+
+
+    // // resize circles in map w/ staggered delay
+    // d3.selectAll("circle").transition()
+    //                         .duration(2000)
+    //                         .delay(1000)
+    //                         .attr("r", function(d) { return 5 })
+    //                     .transition()
+    //                         .duration(2000)
+    //                         .delay(4000)
+    //                         .attr("r", function(d) { return 30 })                            
+
+
+
+
+
+
+
+
+    // Interactivity
+    //http://bl.ocks.org/mbostock/4339083
+    //http://bsullins.github.io/got-images/
+
+
+    //Force Layout Examples
+    //https://bl.ocks.org/mbostock/1073373
+
+    </script>
+
+</html>

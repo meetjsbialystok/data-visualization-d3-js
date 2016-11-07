@@ -1,0 +1,70 @@
+body {
+  background-color: #888;
+}
+
+.county {
+  fill: #111;
+  stroke: rgba(194, 13, 25, 0.25);
+  stroke-width: 1px;
+}
+
+.city {
+  fill: #f30;
+  stroke: rgba(0, 0, 0, 1);
+  stroke-width: 0px;
+  opacity: 0.4;
+}
+
+.city:hover {
+  fill: #C20D19;
+}
+
+.group {
+  font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+  font-size: 15px;
+  fill: #000;
+  cursor: default;
+}
+
+.group:hover {
+  fill: #c00;
+}
+
+.year {
+  fill: #000;
+  font-size: 14px;
+  font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;
+  cursor: default;
+}
+
+.year.selected {
+  fill: #C20D19;
+}
+
+#tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 8px;
+  font: 12px sans-serif;
+  background: #333;
+  color: #ddd;
+  border: solid 1px #C20D19;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.8;
+  display: none;
+  z-index: 10;
+}
+
+a:link {
+ color: #4C8C3F;
+ text-decoration: none;
+}
+a:visited {
+ color: #4C8C3F;
+ text-decoration: none;
+}
+a:hover {
+ color: #C20D19;
+ text-decoration: none;
+}

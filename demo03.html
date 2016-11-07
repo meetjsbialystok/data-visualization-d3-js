@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title></title>
+  </head>
+<script src="d3-4.2.3.min.js"></script>
+<script src="d3-selection-multi.v1.min.js"></script>
+<body>
+
+<script>
+
+var w = 500;
+var h = 200;
+var padding = 2;
+var dataset2 = [5, 10, 15, 20, 25, 30, 35, 40];
+
+
+var svg2 = d3.select('body').append('svg')
+            .attr('width', w)
+            .attr('height', h);
+
+
+svg2.selectAll('rect')
+  .data(dataset2)
+  .enter()
+  .append('rect')
+  .attrs({
+    x: function (d, i) { return i * (w / dataset2.length); },
+    y: function (d) { return h - (d * 4); },
+    width: w / dataset2.length - padding,
+    height: function (d) { return d * 4; },
+    fill: function (d) {
+      return colorPicker(d);
+    }
+  });
+  
+svg2.selectAll('text')
+  .data(dataset2)
+  .enter()
+  .append("text")
+  .text(function (d) {
+    return d;
+  })
+  .attrs({
+    "text-anchor": "middle",
+    "font-family": "sans-serif",
+    "fill": function (d) {
+      return colorPicker(d);
+    },
+    x: function (d, i) {
+      return i * (w / dataset2.length) + (w / dataset2.length - padding) / 2
+    },
+    y: function (d) {
+      return h - (d * 4) - 4
+    }
+  })
+
+
+function colorPicker (v) {
+  if (v <= 15){
+    return "#666666";
+  }
+  else if (v > 15) {
+    return "#FF0033"
+  }
+} 
+
+</script>
+
+  
+</body>
+</html>

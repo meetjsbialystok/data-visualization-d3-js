@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title></title>
+
+<style type="text/css">
+    .x-axis path, .y-axis path
+    .x-axis line, .y-axis line {
+      fill: none;
+      stroke: black;
+      shape-rendering: crispEdges;
+    }
+
+    .x-axis text, .y-axis text {
+      font-family: sans-serif;
+      font-size: 10px;
+    }
+
+    h1 {
+      font-family: sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+    }
+</style>
+
+</head>
+<script src="d3-4.2.3.min.js"></script>
+<script src="d3-selection-multi.v1.min.js"></script>
+<script src="d3-path.v1.min.js"></script>
+<script src="d3-scale.v1.min.js"></script>
+<script src="d3-axis.v1.min.js"></script>
+<script src="d3-shape.v1.min.js"></script>
+<script src="d3-time.v1.min.js"></script>
+<script src="d3-ease.v1.min.js"></script>
+
+<body>
+
+<select id="date-option">
+  <option value="12">Last year</option>
+  <option value="6">Last 6 months</option>
+  <option value="3">Last Quarter</option>
+</select>
+
+<script>
+  var h = 200;
+  var w = 800;
+  var padding = 20;
+
+  function getDate(d){
+    var strDate = new String(d);
+    var year = strDate.substr(0, 4);
+    var month = strDate.substr(4, 2) - 1; //in JS months are counted from zero
+    var day = strDate.substr(6, 2);
+
+    return new Date(year, month, day);
+  }
+
+  function buildLine (ds) {
+    var minDate = getDate(ds.monthlySales[0]['month'])
+    var maxDate = getDate(ds.monthlySales[ds.monthlySales.length - 1]['month'])
+
+    console.log(minDate);
+    console.log(maxDate);
+
+    var xScale = d3.scaleTime()
+                    .domain([minDate, maxDate])
+                    .range([padding, w - padding]);
+
+    var yScale = d3.scaleLinear()
+                  .domain([0, d3.max(ds.monthlySales, function (d) { return d.sales; } ) ])
+                  .range([h - padding, 10]);
+
+    var yAxis = d3.axisLeft(yScale).ticks(4);
+    var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b"));
+
+    var lineFun = d3.line()
+                    .x(function (d) {
+                      return xScale(getDate(d.month));
+                    })
+                    .y(function (d) {
+                      return yScale(d.sales);
+                    })
+  //.curve(d3.curveLinear);
+  //.curve(d3.curveLinearClosed);
+  //.curve(d3.curveMonotoneX);
+  //.curve(d3.curveMonotoneY);
+  //.curve(d3.curveNatural);
+  //.curve(d3.curveStep);
+                    ;
+  
+    var svg = d3.select("body").append("svg")
+                                .attrs({
+                                  width: w,
+                                  height: h,
+                                  "id": "svg-" + ds.category,
+                                });
+    
+    var axisY = svg.append("g")
+                  .call(yAxis)
+                  .attr("class", "y-axis")
+                  .attr("transform", "translate(" + padding + ", 0)");
+
+    var axisX = svg.append("g")
+                  .call(xAxis)
+                  .attr("class", "x-axis")
+                  .attr("transform", "translate(0 ," + (h - padding) + ")");
+
+
+    var viz = svg.append("path")
+                .data([ds['monthlySales']])
+                .attrs({
+                  d: lineFun,
+                  "stroke": "purple",
+                  "stroke-width": 2,
+                  "fill": "none",
+                  "class": "path-" + ds.category
+    });
+  }
+    
+  function updateLine (ds) {
+    var minDate = getDate(ds.monthlySales[0]['month'])
+    var maxDate = getDate(ds.monthlySales[ds.monthlySales.length - 1]['month'])
+
+    var xScale = d3.scaleTime()
+                    .domain([minDate, maxDate])
+                    .range([padding, w - padding]);
+
+    var yScale = d3.scaleLinear()
+                  .domain([0, d3.max(ds.monthlySales, function (d) { return d.sales; } ) ])
+                  .range([h - padding, 10]);
+
+    var yAxis = d3.axisLeft(yScale).ticks(4);
+    var xAxis = d3.axisBottom(xScale).tickFormat(d3.timeFormat("%b")).ticks(ds.monthlySales.length - 1);
+
+    var lineFun = d3.line()
+                    .x(function (d) {
+                      return xScale(getDate(d.month));
+                    })
+                    .y(function (d) {
+                      return yScale(d.sales);
+                    });
+  
+    var svg = d3.select("body").select("#svg-" + ds.category);
+    
+    var axisY = svg.selectAll("g.y-axis").call(yAxis);
+
+    var axisX = svg.selectAll("g.x-axis").call(xAxis);
+
+    var viz = svg.selectAll(".path-" + ds.category)
+                .data([ds['monthlySales']])
+                .transition()
+                .duration(4000)
+                //.ease(d3.easeBounce)
+                .ease(d3.easeBack)
+                //.ease(d3.easeBackInOut)
+                .attrs({
+                  d: lineFun,
+                });
+  }
+
+  function showHeader (ds) {
+    d3.select("body").append("h1").text(ds.category + " sales");
+  }
+
+  d3.json("demo04-monthlySalesbyCategoryMultiple.json", function (error, data) {
+    if(error){
+      console.log(error);
+    } else {
+      console.log(data);
+    }
+
+    var decodedData = JSON.parse(window.atob(data.content))
+
+    console.log(decodedData.contents)
+
+    decodedData.contents.forEach( function(d) {
+      showHeader(d);
+      buildLine(d);      
+    });
+
+    d3.select("#date-option")
+      .on("change", function (d, i) {
+        var sel = d3.select("#date-option").node().value;
+
+        var decodedData = JSON.parse(window.atob(data.content))
+        
+        decodedData.contents.forEach( function(d) {
+          d.monthlySales.splice(0,  d.monthlySales.length - sel);
+
+          updateLine(d);      
+        });
+
+    });
+
+  });
+
+</script>
+  
+</body>
+</html>
+

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    .node {
+        fill: #ccc;
+        stroke: #fff;
+        stroke-width: 2px;
+    }
+    /*add css for links*/
+    
+    path.link {
+      fill: none;
+      stroke-width: 2px;
+      stroke: #777;
+    }
+    
+    h1 {
+        padding: 10px;
+    }
+    
+</style>
+<body>
+    <script src="d3.v3.min.js"></script>
+    <script>
+    
+    var strength = document.URL.split("#")[1] || 1;
+    
+    var header = d3.select("body").append("h1")
+        .html("linkStrength("+strength+")")
+        .style("text-align", "center");
+    
+var width = 640;
+var height = 480;
+
+var nodes = [
+	{name: 'Alice'}, 
+	{name: 'Bob'}, 
+	{name: 'Eve'}
+];
+
+var links = [
+    { source: 0, target: 1 },
+    { source: 1, target: 2 },
+    { source: 2, target: 0 }
+];
+
+var svg = d3.select('body').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+var node = svg.selectAll('.node')
+    .data(nodes)
+    .enter().append('circle')
+    .attr('class', 'node');
+
+var path = svg.append("svg:g").selectAll("path")
+    .data(links)
+  .enter().append("svg:path")
+    .attr("class", "link");
+
+var force = d3.layout.force()
+    .size([width, height])
+    .nodes(nodes)
+    .links(links)
+    .on("tick", tick)
+    .linkDistance(width/3)
+    .linkStrength(strength)
+    .start();
+    
+    
+function tick(e) {
+    
+    node.attr('r', width * 0.05)
+        .attr('cx', function(d) { return d.x; })
+        .attr('cy', function(d) { return d.y; })
+        .call(force.drag);
+
+    path.attr("d", function(d, i) {
+            var dx = d.target.x - d.source.x, 
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            
+            return "M" +
+                d.source.x + "," +
+                d.source.y + "A" +
+                dr + "," + dr + " 0 0,1 " +
+                d.target.x + "," +
+                d.target.y;
+	});
+}
+    
+</script>
